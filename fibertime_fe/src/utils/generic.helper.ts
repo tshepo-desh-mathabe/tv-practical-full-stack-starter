@@ -1,4 +1,4 @@
-export function isNull(value: any): boolean {
+export function isNull(value): boolean {
     return value === null || value === undefined;
 }
 

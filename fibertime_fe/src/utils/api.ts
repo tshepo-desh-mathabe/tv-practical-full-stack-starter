@@ -67,5 +67,6 @@ export const checkConnectionStatus = async (deviceCode: string, token: string) =
             Authorization: `Bearer ${token}`,
         },
     });
+    
     return response.json();
 };

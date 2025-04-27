@@ -1,4 +1,4 @@
-import { Injectable, CanActivate, ExecutionContext, Logger } from '@nestjs/common';
+import { Injectable, CanActivate, ExecutionContext } from '@nestjs/common';
 import { Observable } from 'rxjs';
 import { JwtService } from '@nestjs/jwt';
 import { Reflector } from '@nestjs/core';
@@ -6,7 +6,6 @@ import { IS_PUBLIC_KEY } from '../../../common/decorators/public.decorator';
 
 @Injectable()
 export class JwtAuthGuard implements CanActivate {
-  private readonly logger = new Logger(JwtAuthGuard.name);
   constructor(
     private readonly jwtService: JwtService,
     private readonly reflector: Reflector
@@ -20,7 +19,6 @@ export class JwtAuthGuard implements CanActivate {
    * @returns A boolean, Promise<boolean>, or Observable<boolean> indicating if the request is authorized.
    */
   canActivate(context: ExecutionContext): boolean | Promise<boolean> | Observable<boolean> {
-    this.logger.debug('Auth taking place!!!');
     const isPublic = this.reflector.getAllAndOverride<boolean>(IS_PUBLIC_KEY, [
       context.getHandler(),
       context.getClass(),
@@ -56,7 +54,6 @@ export class JwtAuthGuard implements CanActivate {
    * @returns The JWT token if present and valid, otherwise null.
    */
   private extractToken(request): string | null {
-    this.logger.debug('Auth taking place!!!');
     const [type, token] = request.headers.authorization?.split(' ') ?? [];
     return type === 'Bearer' ? token : null;
   }

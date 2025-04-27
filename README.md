@@ -5,89 +5,37 @@ This repository contains frontend and back-end and steps on how to get the proje
 Make sure you have `node.js` installed.
 Might not be required, but have NestJS install by running `npm install -g @nestjs/cli` if you planning on adding new logic.
 
-## `2. Run Docker Compose`
-Make sure that docker-compose runs. One can run it locally by using `docker compose up -d` to get you all the necessary container required to run the project.
+## `2. Database Setup`
+The project uses `Postgres` and below are the default connection details. If you have `Postgres` running with different DB connection details.
 
-## `3. Database Setup`
-The project uses `Postgres` and below are the default connection details. If you have `Postgres` running with different DB connection details, then skip this step and move to `3.1`
-`
-Host: localhost
-Port: 5432
-Database: fibertime
-Username: root
-Password: root
-Driver: PostgreSQL
-`
+`Host: localhost`
+`Port: 5432`
+`Database: fibertime`
+`Username: root`
+`Password: root`
+`Driver: PostgreSQL`
 
-### 3.1 Postgres Already Running
-So you have `Postgres` running and connection details are different, then stop all containers for this project with `docker compose down -v`.
-Edit the docker file, essentially the below to match your current running connection details:
-`
-...
-...
-fibertime-db:
-    ...
-    ports:
-    - "5432:5432"
-    environment:
-      - POSTGRES_USER=root
-      - POSTGRES_PASSWORD=root
-      ...
-      ...
-`
+## `3. Run Docker Compose`
+Make sure you run docker-compose. One can run it locally by using `docker compose up -d` to get you all the necessary container required to run the project.
+Below is a list of environment variables one should pass when running docker:
 
-## 4. `Create Tables`
-Run the below to have your tables created:
-`
--- Users table
-CREATE TABLE users (
-  id SERIAL PRIMARY KEY,
-  phone_number VARCHAR(15) UNIQUE NOT NULL,
-  created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
-  updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
-);
+| Name          | Default           | Definition  |
+| ------------- |:-------------:| -----|
+| DB_HOST       | `localhost` | DB host |
+| DB_PORT      | `5432`      | DB port |
+| DB_PASSWORD | `root`      | DB password |
+| DB_USERNAME  | `root` | DB username |
+| DB_NAME      | `fibertime` | DB name |
+| REDIS_URL | `redis://localhost:6379` | redis cache url |
+| JWT_SECRET       | `fibertime-practical-haha-secret-me` | JWT secret |
+| PORT      | `5588`      | backend application port |
+| FRONTEND_URL | `http://localhost:3535`      | FE application url |
+| OTP_EXPIRY_MINUTES  | `5` | OTP expiry in minutes |
+| DEVICE_CODE_EXPIRY_MINUTES  | `24` | device code expiry in minutes |
+| BUNDLE_EXPIRY_DAYS       | `30` | bundles expiry in days |
+| ALLOW_CREDENTIALS      | `true`      | allow security credentials |
+| NEXT_PUBLIC_API_BASE_URL | `http://localhost:5588/api` | backend URL |
 
--- Devices table
-CREATE TABLE devices (
-  id SERIAL PRIMARY KEY,
-  device_code VARCHAR(4) UNIQUE NOT NULL,
-  status VARCHAR(10) NOT NULL DEFAULT 'active',
-  expires_at TIMESTAMP WITH TIME ZONE NOT NULL,
-  created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
-  user_id INTEGER REFERENCES users(id)
-);
 
--- Bundles table
-CREATE TABLE bundles (
-  id SERIAL PRIMARY KEY,
-  user_id INTEGER NOT NULL REFERENCES users(id),
-  expires_at TIMESTAMP WITH TIME ZONE NOT NULL,
-  remaining_days INTEGER NOT NULL,
-  created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
-);
-
--- OTPs table with rate limiting
-CREATE TABLE otps (
-  id SERIAL PRIMARY KEY,
-  phone_number VARCHAR(15) NOT NULL,
-  code VARCHAR(6) NOT NULL,
-  expires_at TIMESTAMP WITH TIME ZONE NOT NULL,
-  attempts INTEGER DEFAULT 0,
-  created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
-);
-
--- Indexes for performance
-CREATE INDEX idx_devices_code ON devices(device_code);
-CREATE INDEX idx_devices_user ON devices(user_id);
-CREATE INDEX idx_bundles_user ON bundles(user_id);
-CREATE INDEX idx_otps_phone ON otps(phone_number);
-`
-
-## 5. Get fibertime_be running
-npm i
-npm start
-swagger
-
-## 6. Get fibertime_fe running
-npm i
-npm start
+## `3. Swagger Documentation`
+Alternatively, one can view backend URL's under `http://localhost:5588/api/swagger-ui`. Though not recommened for production, you can replace the `localhost` with the production base URL.

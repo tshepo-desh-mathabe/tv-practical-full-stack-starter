@@ -17,7 +17,7 @@ export default function VerifyPage() {
         login(phoneNumber, otp).then(res => {
             const isError = isErrorResponse(res);
             if (!isError) {
-                const token = res.token?.startsWith("Bearer ") ? res.token.slice(7) : res.token;
+                const token = res.token?.startsWith('Bearer ') ? res.token.slice(7) : res.token;
                 router.push(`${AppRotes.TV_CONNCECT}?token=${encodeURIComponent(token)}&phoneNumber=${encodeURIComponent(phoneNumber)}`);
             }
         }).catch(error => {

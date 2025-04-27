@@ -1,6 +1,6 @@
 export default () => ({
     cors: {
-      allowedOrigins: process.env.ALLOWED_ORIGINS?.split(',') || [],
+      allowedOrigins: process.env.FRONTEND_URL?.split(',') || [],
       allowedMethods: process.env.ALLOWED_METHODS?.split(',') || [
         'GET',
         'HEAD',
