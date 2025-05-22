@@ -1,21 +1,17 @@
 'use client';
 import { useEffect } from 'react';
-import { useRouter } from 'next/navigation';
-import { AppRotes } from '../utils/app.route';
 
-export default function RedirectToLogin() {
-  const router = useRouter();
-
+export default function RedirectToMobile() {
   useEffect(() => {
     const timer = setTimeout(() => {
-      router.push(`${AppRotes.MOBILE_HOME}`);
+      window.location.href = 'http://localhost:3535/mobile';
     }, 1000);
 
     return () => clearTimeout(timer);
-  }, [router]);
+  }, []);
 
   return (
-    <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
+    <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh', backgroundColor: '#212529', color: '#FFFFFF' }}>
       Please wait while we connect you...
     </div>
   );
